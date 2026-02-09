@@ -1,0 +1,31 @@
+{
+  "name": "jest-network-blocker",
+  "version": "1.0.0",
+  "description": "Jest plugin to block all external network traffic (HTTP, HTTPS, TCP, DNS) to ensure isolated tests.",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "jest",
+    "network",
+    "blocker",
+    "http",
+    "tcp",
+    "testing",
+    "security"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "jest": ">=27.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
