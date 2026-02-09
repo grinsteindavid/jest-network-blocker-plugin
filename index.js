@@ -98,30 +98,56 @@ if (ALLOW_NETWORK) {
     return this;
   };
   
+  // Helper to extract host/port from request args
+  function getRequestDetails(args) {
+    let host, port;
+    const firstArg = args[0];
+    
+    if (typeof firstArg === 'string' || firstArg instanceof URL) {
+      // request(url, [options], [callback])
+      try {
+        const urlObj = new URL(firstArg);
+        host = urlObj.hostname;
+        port = urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80);
+      } catch (e) {
+        // Fallback for invalid URLs or partial paths if needed, though http.request expects valid URL
+        host = null; 
+      }
+      
+      // Check second arg for options if they override (though usually URL takes precedence for host)
+      // Actually, options can override auth, agent, etc. but host usually comes from URL if provided.
+    } else {
+      // request(options, [callback])
+      const options = firstArg;
+      host = options?.host || options?.hostname;
+      port = options?.port;
+    }
+    
+    return { host, port };
+  }
+
   // Block HTTP requests
   http.request = function(...args) {
-    const options = args[0];
-    const host = options?.host || options?.hostname;
+    const { host, port } = getRequestDetails(args);
   
     if (isAllowedHost(host)) {
       return originalHttpRequest.apply(this, args);
     }
   
     console.error(`❌ Blocked HTTP request: ${host}`);
-    throw blockNetworkError('HTTP', host, options?.port || 80);
+    throw blockNetworkError('HTTP', host, port || 80);
   };
   
   // Block HTTPS requests
   https.request = function(...args) {
-    const options = args[0];
-    const host = options?.host || options?.hostname;
+    const { host, port } = getRequestDetails(args);
   
     if (isAllowedHost(host)) {
       return originalHttpsRequest.apply(this, args);
     }
   
     console.error(`❌ Blocked HTTPS request: ${host}`);
-    throw blockNetworkError('HTTPS', host, options?.port || 443);
+    throw blockNetworkError('HTTPS', host, port || 443);
   };
   
   // Block DNS lookups

@@ -44,6 +44,31 @@ Or if you are using `setupFilesAfterEnv` pointing to a setup file:
 require('jest-network-blocker');
 ```
 
+### Integration Test Example
+
+Here is how you can verify the blocker is working in your tests:
+
+```javascript
+const http = require('http');
+
+describe('Network Security', () => {
+  test('should block external API calls', (done) => {
+    // Attempt to call Google
+    const req = http.request('http://www.google.com', (res) => {
+      done(new Error('Request should have been blocked!'));
+    });
+
+    req.on('error', (err) => {
+      expect(err.message).toContain('NETWORK BLOCKED');
+      expect(err.message).toContain('www.google.com');
+      done();
+    });
+
+    req.end();
+  });
+});
+```
+
 Once installed and configured, any test that attempts to make a network request to a non-local address will fail with a descriptive error.
 
 ### Example Error
