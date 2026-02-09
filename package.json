@@ -20,6 +20,14 @@
     "testing",
     "security"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grinsteindavid/jest-network-blocker-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/grinsteindavid/jest-network-blocker-plugin/issues"
+  },
+  "homepage": "https://github.com/grinsteindavid/jest-network-blocker-plugin#readme",
   "author": "",
   "license": "MIT",
   "peerDependencies": {
